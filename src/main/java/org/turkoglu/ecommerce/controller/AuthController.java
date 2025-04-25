@@ -3,10 +3,7 @@ package org.turkoglu.ecommerce.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.turkoglu.ecommerce.dto.LoginDTO;
-import org.turkoglu.ecommerce.dto.LoginResponseDTO;
-import org.turkoglu.ecommerce.dto.UserInfoDTO;
-import org.turkoglu.ecommerce.dto.UserRegisterDTO;
+import org.turkoglu.ecommerce.dto.*;
 import org.turkoglu.ecommerce.entity.User;
 import org.turkoglu.ecommerce.service.UserService;
 import org.turkoglu.ecommerce.security.JwtService;
@@ -26,18 +23,9 @@ public class AuthController {
     }
 
     // Giriş yapma
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginDTO loginDTO) {
-        try {
-            // Kullanıcıyı login etme
-            String token = userService.loginUser(loginDTO);
-
-            // Token'ı response olarak döndür
-            return ResponseEntity.ok(new LoginResponseDTO(token));
-        } catch (RuntimeException e) {
-            // Hatalı giriş durumunda
-            return ResponseEntity.status(401).body(new LoginResponseDTO("Email veya şifre hatalı"));
-        }
+    @GetMapping("/login")
+    public ResponseEntity<TokenDTO> login(@RequestBody LoginDTO loginDTO) {
+        return ResponseEntity.ok(userService.loginUser(loginDTO));
     }
 
 }
