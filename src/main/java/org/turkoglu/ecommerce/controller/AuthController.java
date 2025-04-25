@@ -3,10 +3,11 @@ package org.turkoglu.ecommerce.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.turkoglu.ecommerce.dto.*;
-import org.turkoglu.ecommerce.entity.User;
+import org.turkoglu.ecommerce.dto.LoginDTO;
+import org.turkoglu.ecommerce.dto.TokenDTO;
+import org.turkoglu.ecommerce.dto.UserInfoDTO;
+import org.turkoglu.ecommerce.dto.UserRegisterDTO;
 import org.turkoglu.ecommerce.service.UserService;
-import org.turkoglu.ecommerce.security.JwtService;
 
 @RestController
 @RequestMapping("/auth")
@@ -14,7 +15,6 @@ import org.turkoglu.ecommerce.security.JwtService;
 public class AuthController {
 
     private final UserService userService;
-    private final JwtService jwtService;
 
     // Kayıt olma
     @PostMapping("/register")

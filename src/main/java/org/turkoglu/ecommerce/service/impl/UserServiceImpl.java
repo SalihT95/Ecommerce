@@ -1,7 +1,6 @@
 package org.turkoglu.ecommerce.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.turkoglu.ecommerce.dto.LoginDTO;
@@ -14,8 +13,6 @@ import org.turkoglu.ecommerce.repository.UserRepository;
 import org.turkoglu.ecommerce.security.JwtService;
 import org.turkoglu.ecommerce.service.UserService;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -23,11 +20,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-
-    @Override
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
 
     @Override
     public UserInfoDTO registerUser(UserRegisterDTO userRegisterDTO) {
