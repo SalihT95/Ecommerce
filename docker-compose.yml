@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql_container
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=APPsqt!312
+    ports:
+      - "1433:1433"
+    restart: always
+    volumes:
+      - mssql_data:/var/opt/mssql
+volumes:
+  mssql_data:
