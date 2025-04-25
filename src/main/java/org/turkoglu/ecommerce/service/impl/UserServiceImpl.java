@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.turkoglu.ecommerce.dto.LoginDTO;
+import org.turkoglu.ecommerce.dto.TokenDTO;
 import org.turkoglu.ecommerce.dto.UserInfoDTO;
 import org.turkoglu.ecommerce.dto.UserRegisterDTO;
 import org.turkoglu.ecommerce.entity.Role;
@@ -48,12 +49,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String loginUser(LoginDTO loginDTO) {
-        Optional<User> userOptional = userRepository.findByEmail(loginDTO.getEmail());
-        if (userOptional.isEmpty() || !passwordEncoder.matches(loginDTO.getPassword(), userOptional.get().getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-        User user = userOptional.get();
+    public TokenDTO loginUser(LoginDTO loginDTO) {
+        User user = userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new RuntimeException("User name or password incorrect")); // Kullanıcı bulunamazsa hata fırlatılıyor
         return jwtService.generateToken(user);  // Token oluşturuluyor ve döndürülüyor
     }
 

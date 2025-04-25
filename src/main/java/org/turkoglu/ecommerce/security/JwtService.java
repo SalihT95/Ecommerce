@@ -3,8 +3,10 @@ package org.turkoglu.ecommerce.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.turkoglu.ecommerce.dto.TokenDTO;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -14,8 +16,10 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    private static final String SECRET_KEY = "turkoglu_ecommerce_secret_key"; // Dilersen .yml içine alabiliriz
-    private static final long TOKEN_VALIDITY = 1000 * 60 * 60 * 10; // 10 saatlik token geçerliliği
+    @Value("${spring.security.secret-key}")
+    private String secretKey;
+    @Value("${spring.security.validity}")
+    private Long validity;
 
     // Token'dan kullanıcı adını çıkar
     public String extractUsername(String token) {
@@ -33,20 +37,23 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    // Kullanıcı bilgilerini alarak token oluştur
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    // Kullanıcı bilgileriyle token oluştur ve DTO döndür
+    public TokenDTO generateToken(UserDetails userDetails) {
+        return generateToken(new HashMap<>(), userDetails); // Varsayılan claim olmayan metoda yönlendirme
     }
 
-    // Ekstra claim'ler ile token oluştur
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
-        return Jwts.builder()
+    // Ekstra claim'ler ile token oluştur ve DTO döndür
+    public TokenDTO generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        long expirationTime = System.currentTimeMillis() + validity; // Geçerlilik süresi
+        String token = Jwts.builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_VALIDITY)) // Geçerlilik süresi
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(expirationTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+
+        return new TokenDTO(token, expirationTime); // DTO olarak döndür
     }
 
     // Token geçerliliğini kontrol et
@@ -64,7 +71,7 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()  // parser() yerine parserBuilder() kullanımı
-                    .setSigningKey(SECRET_KEY)
+                    .setSigningKey(secretKey)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();

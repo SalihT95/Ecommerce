@@ -17,6 +17,8 @@ spring:
     user:
       name: admin
       password: admin123
+    secret-key: 0JmBkoPTLa8UosMH4+kQZ5Jvk8uJ0vMVz9Sit3OPAlQ=
+    validity: 3600000
 
   jackson:
     serialization:
