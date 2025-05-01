@@ -24,9 +24,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtAuthFilter jwtAuthFilter;
-    private final CustomUserDetailsService userDetailsService;
-
     private static final String[] WHITE_LIST_URL = {
             "/auth/**",
             "/v2/api-docs",
@@ -40,6 +37,8 @@ public class SecurityConfig {
             "/webjars/**",
             "/swagger-ui.html"
     };
+    private final JwtAuthFilter jwtAuthFilter;
+    private final CustomUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

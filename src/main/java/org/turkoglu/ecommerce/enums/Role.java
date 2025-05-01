@@ -1,4 +1,4 @@
-package org.turkoglu.ecommerce.entity;
+package org.turkoglu.ecommerce.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
